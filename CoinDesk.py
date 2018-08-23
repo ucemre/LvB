@@ -131,7 +131,7 @@ eth = []
 for link in links:
     article = access_article(link)
     text = article_txt(article)
-    eth = is_eth(text)
+    eth.append = is_eth(text)
         
 a = access_article(links[0])
 b = article_txt(a)
