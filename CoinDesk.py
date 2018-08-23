@@ -134,12 +134,12 @@ for link in links:
     eth.append(is_eth(text))
 
 #Initiate the csv file incl header
-with open("Coindesk_Articles",'w') as file:
+with open("Coindesk_Articles.csv",'w') as file:
         file.write("Date, Title, Author, Etherum, Link")
         file.write('\n')    
  
 # write results into csv using a loop (you stoill have to implement the loop)
-with open("Coindesk_Articles",'a') as file:
+with open("Coindesk_Articles.csv",'a') as file:
     file.write( string containing containing comma seperated values that are supposed to be one row )
     file.write('\n')  
     
