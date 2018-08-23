@@ -9,15 +9,8 @@ from bs4 import BeautifulSoup
 import re
 import requests
 import pandas as pd
-import time
+from selenium import webdriver
 import string
-from datetime import datetime, timedelta
-import datetime
-from dateutil.parser import parse
-import seaborn as sns
-import matplotlib.pyplot as plt
-from scipy import stats
-import numpy as np
 
 
 start_url = 'https://www.coindesk.com/?s=smart+contracts'
@@ -25,41 +18,10 @@ html      = requests.get(start_url)
 soup      = BeautifulSoup(html.text, "html5lib")
 txt = soup.find('div', {"class" : "category-content"})
 
-dates = [d[16:-1]for d in re.findall('<time datetime="[0-9]{4}-[0-9]{2}-[0-9]{2}T',str(txt))]
+dates = [d[16:-1]for d in re.findall('<time datetime="[0-9]{4}-[0-9]{2}-[0-9]{2}T', str(txt))]
 dates
 
-divisions = [re.findall('<div id="post-[0-9]{6}.*? </div>', str(txt))]
-
-authors = [d[11:-1]for d in re.findall('<cite title=".*?"', str(txt))]
-authors
-
-titles = [d[10:]for d in re.findall('<a title=".*? ', str(txt))]
-titles
-
-
-#######################
-title = txt.h3.a.get('title')
-author = txt.cite.a.text
-link = txt.h3.a.get('href')
-
-article = requests.get(link)
-soup      = BeautifulSoup(article.text, "html5lib")
-artxt = soup.find('div', {"class" : "single-content"})
-
-translator = str.maketrans('', '', string.punctuation)
-artxt = artxt.translate(translator).lower()
-
-def is_eth(text):
-    if 'ethereum' in text:
-        return('In article ' + title + " the word etherium appears.")
-    else:
-        return('In article ' + title + " the word etherium does not appear.")
-is_eth(artxt)
-
-########################
-
 temptitle = txt.find_all(class_='fade')
-
 
 titles = []
 for title in temptitle:
@@ -108,7 +70,6 @@ def remove_duplicates(values):
 
 links = remove_duplicates(links)
 
-
 # Removing author links
 def remove_authors(value):
     output = []
@@ -118,7 +79,6 @@ def remove_authors(value):
     return output
 
 links = remove_authors(links)
-
 
 def access_article(value):
     article = requests.get(value)
@@ -140,22 +100,13 @@ def is_eth(text):
 is_eth(artxt)
 
 eth = []
+
 for link in links:
     article = access_article(link)
     text = article_txt(article)
     eth.append(is_eth(text))
-
-#Initiate the csv file incl header
-with open("Coindesk_Articles.csv",'w') as file:
-        file.write("Date, Title, Author, Etherum, Link")
-        file.write('\n')    
- 
-# write results into csv using a loop (you stoill have to implement the loop)
-with open("Coindesk_Articles.csv",'a') as file:
-    file.write( string containing containing comma seperated values that are supposed to be one row )
-    file.write('\n')  
     
+df = pd.DataFrame({"date": dates, "author": authors, "title": titles, "link": links, "is_ethereum" : eth})
+df = df[['date', 'author', 'title', 'link', 'is_ethereum']]
     
-a = access_article(links[0])
-b = article_txt(a)
-is_eth(b)
+df.to_csv('coindesk.csv')
