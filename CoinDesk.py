@@ -24,6 +24,8 @@ start_url = 'https://www.coindesk.com/?s=smart+contracts'
 html      = requests.get(start_url)
 soup      = BeautifulSoup(html.text, "html5lib")
 txt = soup.find('div', {"class" : "category-content"})
+dates = [d[16:-1]for d in re.findall('<time datetime="[0-9]{4}-[0-9]{2}-[0-9]{2}T',str(txt))]
+dates
 
 #######################
 title = txt.h3.a.get('title')
