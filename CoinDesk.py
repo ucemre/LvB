@@ -38,7 +38,7 @@ translator = str.maketrans('', '', string.punctuation)
 artxt = artxt.translate(translator).lower()
 
 def is_eth(text):
-    if 'etherium' in text:
+    if 'ethereum' in text:
         return('In article ' + title + " the word etherium appears.")
     else:
         return('In article ' + title + " the word etherium does not appear.")
@@ -120,17 +120,18 @@ def article_txt(soup):
     return(artxt)
     
 def is_eth(text):
-    if 'etherium' in text:
-        return("In article the word etherium appears.")
+    if 'ethereum' in text:
+        return 1
     else:
-        return("In article the word etherium does not appear.")
+        return 0
 
 is_eth(artxt)
 
+eth = []
 for link in links:
     article = access_article(link)
     text = article_txt(article)
-    is_eth(text)
+    eth = is_eth(text)
         
 a = access_article(links[0])
 b = article_txt(a)
